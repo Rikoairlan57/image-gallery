@@ -1,17 +1,15 @@
-
 import { initializeApp } from "firebase/app";
-import {getStorage} from "firebase/storage";
-import {getFirestore} from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyByh0JNTa6de6hurkYQCNZRuZ1DMY3KsyM",
-  authDomain: "gallery-website-dbb3b.firebaseapp.com",
-  projectId: "gallery-website-dbb3b",
-  storageBucket: "gallery-website-dbb3b.appspot.com",
-  messagingSenderId: "84535505978",
-  appId: "1:84535505978:web:e6bf6ddf43ad7166f07103"
+  apiKey: "AIzaSyDtPL7slscQ-A5HIbsW9FifuyqIewxf-2M",
+  authDomain: "website-gallery-48a33.firebaseapp.com",
+  projectId: "website-gallery-48a33",
+  storageBucket: "website-gallery-48a33.appspot.com",
+  messagingSenderId: "451067698304",
+  appId: "1:451067698304:web:372fdcf048c5b44db01a65",
 };
-
 
 export const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app);
