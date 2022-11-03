@@ -1,12 +1,12 @@
-import * as React from 'react';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
-import { Avatar, Tooltip, Typography } from '@mui/material';
-import moment from 'moment';
-import profileImg from '../../img/profile.jpg';
-import Options from './Options';
-import useFirestore from '../../firebase/useFirestore';
+import * as React from "react";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import SimpleReactLightbox, { SRLWrapper } from "simple-react-lightbox";
+import { Avatar, Tooltip, Typography } from "@mui/material";
+import moment from "moment";
+import Options from "./Options";
+import useFirestore from "../../firebase/useFirestore";
+import { useAuth } from "../../context/AuthContext";
 
 function srcset(image, size, rows = 1, cols = 1) {
   return {
@@ -18,7 +18,8 @@ function srcset(image, size, rows = 1, cols = 1) {
 }
 
 export default function ImagesList() {
-  const { documents } = useFirestore();
+  const { currentUser } = useAuth();
+  const { documents } = useFirestore("gallery");
   return (
     <SimpleReactLightbox>
       <SRLWrapper>
@@ -37,13 +38,15 @@ export default function ImagesList() {
                 ].rows
               }
               sx={{
-                opacity: '.7',
-                transition: 'opacity .3s linear',
-                cursor: 'pointer',
-                '&:hover': { opacity: 1 },
+                opacity: ".7",
+                transition: "opacity .3s linear",
+                cursor: "pointer",
+                "&:hover": { opacity: 1 },
               }}
             >
-              <Options imageId={item.id} />
+              {currentUser?.uid === item?.data?.uid && (
+                <Options imageId={item?.id} />
+              )}
               <img
                 {...srcset(
                   item?.data?.imageURL,
@@ -55,35 +58,35 @@ export default function ImagesList() {
                     index - Math.floor(index / pattern.length) * pattern.length
                   ].cols
                 )}
-                alt={item?.data?.uName || item?.data?.uEmail}
+                alt={item?.data?.uName || item?.data?.uEmail?.split("@")[0]}
                 loading="lazy"
               />
               <Typography
                 variant="body2"
                 component="span"
                 sx={{
-                  position: 'absolute',
+                  position: "absolute",
                   bottom: 0,
                   left: 0,
-                  color: 'white',
-                  background: 'rgba(0,0,0, .3)',
-                  p: '5px',
+                  color: "white",
+                  background: "rgba(0,0,0, .3)",
+                  p: "5px",
                   borderTopRightRadius: 8,
                 }}
               >
                 {moment(item?.data?.timestamp?.toDate()).fromNow()}
               </Typography>
               <Tooltip
-                title={item?.data?.uName || item?.data?.uEmail}
+                title={item?.data?.uName || item?.data?.uEmail?.split("@")[0]}
                 sx={{
-                  position: 'absolute',
-                  bottom: '3px',
-                  right: '3px',
+                  position: "absolute",
+                  bottom: "3px",
+                  right: "3px",
                 }}
               >
                 <Avatar
                   src={item?.data?.uPhoto}
-                  imgProps={{ 'aria-hidden': true }}
+                  imgProps={{ "aria-hidden": true }}
                 />
               </Tooltip>
             </ImageListItem>
