@@ -1,6 +1,6 @@
-import { ImageList } from '@mui/material';
-import React from 'react';
-import ProgressItem from './ProgressItem';
+import { ImageList } from "@mui/material";
+import React from "react";
+import ProgressItem from "./ProgressItem";
 
 const ProgressList = ({ files }) => {
   return (
