@@ -11,7 +11,9 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { Button } from "@mui/material";
 import { Lock } from "@mui/icons-material";
-import profileImg from "../img/profile.jpg";
+// import profileImg from "../img/profile.jpg";
+import { useAuth } from "../context/AuthContext";
+import Login from "./user/Login";
 
 export default function Nav() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -22,22 +24,43 @@ export default function Nav() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  profileImg = null;
-  const [currentUser, setCurrentUser] = React.useState({
-    email: "test@test.com",
-    displayName: "",
-    photoURL: profileImg,
-  });
+
+  const { currentUser, setModal, logout, setAlert } = useAuth();
+
+  const openLogin = () => {
+    setModal({ isOpen: true, title: "Login", content: <Login /> });
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      setAlert({
+        isAlert: true,
+        severity: "error",
+        message: error.message,
+        timeout: 8000,
+        location: "main",
+      });
+      console.log(error);
+    }
+  };
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         {!currentUser ? (
-          <Button startIcon={<Lock />}>Login</Button>
+          <Button startIcon={<Lock />} onClick={openLogin}>
+            Login
+          </Button>
         ) : (
           <Tooltip title="Account settings">
             <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
-              <Avatar sx={{ width: 32, height: 32 }} src={currentUser?.photoURL}>
-                {currentUser?.displayName?.charAt(0)?.toUpperCase() || currentUser?.email?.charAt(0)?.toUpperCase()}
+              <Avatar
+                sx={{ width: 32, height: 32 }}
+                src={currentUser?.photoURL}
+              >
+                {currentUser?.displayName?.charAt(0)?.toUpperCase() ||
+                  currentUser?.email?.charAt(0)?.toUpperCase()}
               </Avatar>
             </IconButton>
           </Tooltip>
@@ -78,7 +101,7 @@ export default function Nav() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem>
-          <Avatar /> Profile
+          <Avatar src={currentUser?.photoURL} /> Profile
         </MenuItem>
         <Divider />
         <MenuItem>
@@ -87,7 +110,7 @@ export default function Nav() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
